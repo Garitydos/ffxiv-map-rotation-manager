@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Map Lister</title>
+    <style>
+        body {
+  /* Center the form on the page */
+  text-align: center;
+}
+
+form {
+  display: inline-block;
+  /* Form outline */
+  padding: 1em;
+  border: 1px solid #ccc;
+  border-radius: 1em;
+}
+
+p + p {
+  margin-top: 1em;
+}
+
+label {
+  /* Uniform size & alignment */
+  display: inline-block;
+  min-width: 90px;
+  text-align: right;
+}
+
+input,
+textarea {
+  /* To make sure that all text fields have the same font settings
+     By default, text areas have a monospace font */
+  font: 1em sans-serif;
+  /* Uniform text field size */
+  width: 300px;
+  box-sizing: border-box;
+  /* Match form field borders */
+  border: 1px solid #999;
+}
+
+input:focus,
+textarea:focus {
+  /* Set the outline width and style */
+  outline-style: solid;
+  /* To give a little highlight on active elements */
+  outline-color: #000;
+}
+
+textarea {
+  /* Align multiline text fields with their labels */
+  vertical-align: top;
+  /* Provide space to type some text */
+  height: 5em;
+}
+
+.button {
+  /* Align buttons with the text fields */
+  padding-left: 90px; /* same size as the label elements */
+}
+
+button {
+  /* This extra margin represent roughly the same space as the space
+     between the labels and their text fields */
+  margin-left: 0.5em;
+}
+
+#next-player {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+
+    </style>
+</head>
+<body>
+    <h1>Map List Manager</h1>
+    <h5>Ever thought to yourself "Gee, I sure do wish I had some way to keep track of whose turn is next for this map rotation!", and then gone and built yourself a spreadsheet to keep track of who goes when, who's gone, and who's going next, and <i>then</i> forgotten to keep up and lost track anyway? No? Well, that's kind of weird. Maybe you need more friends. When you get some, come back and use this page!</h5>
+        <input type="text" id="nameInput" placeholder="Enter a name"/>
+        <button onclick="addName()">Add</button>
+        <br><br>
+        <button onclick="alphabetize()">Alphabetize</button>
+        <button onclick="randomize()">Randomize</button>
+    <h2 id="next-player">No names yet</h2>
+    <button onclick="goNext()">Go Next</button>
+
+    
+  <h3>Remaining Names:</h3>
+  <ul id="nameList"></ul>
+  
+  <script>
+    let names = [];
+
+    function render() {
+      const nextPlayer = document.getElementById("next-player");
+      const list = document.getElementById("nameList");
+
+      if (names.length > 0) {
+        nextPlayer.textContent = names[0];
+      } else {
+        nextPlayer.textContent = "No names yet";
+      }
+
+      list.innerHTML = "";
+      for (let i = 1; i < names.length; i++) {
+        const li = document.createElement("li");
+        li.textContent = names[i];
+        list.appendChild(li);
+      }
+    }
+
+    function addName() {
+      const input = document.getElementById("nameInput");
+      const name = input.value.trim();
+      if (name) {
+        names.push(name);
+        input.value = "";
+        render();
+      }
+    }
+
+    function alphabetize() {
+      names.sort((a, b) => a.localeCompare(b));
+      render();
+    }
+
+    function randomize() {
+      for (let i = names.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [names[i], names[j]] = [names[j], names[i]];
+      }
+      render();
+    }
+
+    function goNext() {
+      if (names.length > 1) {
+        const first = names.shift();
+        names.push(first);
+        render();
+      }
+    }
+
+    // Optional: Pressing "Enter" in the input adds the name
+    document.getElementById("nameInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        addName();
+      }
+    });
+  </script>
+</body>
+</html>
